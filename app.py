@@ -53,20 +53,22 @@ async def check_space_status():
             response = requests.get(space_url)
             current_time = get_current_time()  # Obtener la hora y fecha actual
 
+            hyperlink = f"[Acceder al Space]({space_url})"
+
             if response.status_code == 200:
                 page_content = response.text
 
                 # Verificamos si alguno de los textos de error está en el contenido de la página
                 if any(error_text in page_content for error_text in error_texts):
                     print(f"El Space está inactivo ({current_time}).")
-                    await channel.send(f"⚠️ <@&{role_id}> El Space está inactivo ({current_time}). Favor de verificar.")
+                    await channel.send(f"⚠️ <@&{role_id}> El Space está inactivo ({current_time}). Favor de verificar. {hyperlink}")
                 else:
                     print(f"El Space está activo ({current_time}).")
                     await channel.send(f"✅ El Space está activo ({current_time}).")
             else:
                 # Código de estado diferente a 200 significa que el Space tiene problemas
                 print(f"El Space está inactivo (código de estado distinto de 200) ({current_time}).")
-                await channel.send(f"⚠️ <@&{role_id}> El Space está inactivo ({current_time}). Favor de verificar.")
+                await channel.send(f"⚠️ <@&{role_id}> El Space está inactivo ({current_time}). Favor de verificar.{hyperlink}")
         except requests.exceptions.RequestException as e:
             current_time = get_current_time()  # Obtener la hora y fecha actual en caso de error
             print(f"Error al acceder al Space: {e} ({current_time})")
